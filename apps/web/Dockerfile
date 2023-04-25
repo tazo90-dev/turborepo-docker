@@ -7,8 +7,8 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN pnpm setup
 RUN npx pnpm i -g pnpm@latest turbo
+RUN pnpm setup
 COPY . .
 RUN turbo prune --scope=web --docker
 
@@ -18,6 +18,7 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 WORKDIR /app
 RUN npx pnpm i -g pnpm@latest turbo
+RUN pnpm setup
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
