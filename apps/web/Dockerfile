@@ -7,8 +7,7 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npx pnpm i -g pnpm@latest turbo
-RUN pnpm setup
+RUN yarn global add turbo
 COPY . .
 RUN turbo prune --scope=web --docker
 
@@ -17,16 +16,12 @@ FROM node:alpine AS installer
 RUN apk add --no-cache libc6-compat
 RUN apk update
 WORKDIR /app
-RUN npx pnpm i -g pnpm@latest turbo
-RUN pnpm setup
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
-COPY pnpm-lock.yaml ./pnpm-lock.yaml
-COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/out/json/ .
-# COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-RUN pnpm install
+COPY --from=builder /app/out/yarn.lock ./yarn.lock
+RUN yarn install
 
 # Build the project
 COPY --from=builder /app/out/full/ .
@@ -39,7 +34,7 @@ COPY turbo.json turbo.json
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
 
-RUN pnpm turbo run build --filter=web...
+RUN yarn turbo run build --filter=web...
 
 FROM node:alpine AS runner
 WORKDIR /app
