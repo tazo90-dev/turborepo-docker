@@ -15,8 +15,8 @@ RUN turbo prune --scope=web --docker
 FROM node:alpine AS installer
 RUN apk add --no-cache libc6-compat
 RUN apk update
-RUN npx pnpm i -g pnpm@latest turbo
 WORKDIR /app
+RUN npx pnpm i -g pnpm@latest turbo
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
