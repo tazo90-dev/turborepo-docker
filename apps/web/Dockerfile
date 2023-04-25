@@ -7,7 +7,7 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g pnpm turbo
+RUN npm install -g pnpm@7.29.1 turbo
 COPY . .
 RUN turbo prune --scope=web --docker
 
@@ -15,7 +15,7 @@ RUN turbo prune --scope=web --docker
 FROM node:alpine AS installer
 RUN apk add --no-cache libc6-compat
 RUN apk update
-RUN npm install -g pnpm turbo
+RUN npm install -g pnpm@7.29.1 turbo
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
